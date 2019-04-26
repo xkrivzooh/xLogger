@@ -8,7 +8,6 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy;
-import ch.qos.logback.core.util.FileSize;
 import com.google.common.base.Preconditions;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -19,15 +18,7 @@ public class XLoggerFactory {
 
     public static XLogger getLogger(String identify) {
         Logger logger = org.slf4j.LoggerFactory.getLogger(identify);
-        XLoggerConfiguration configuration = XLoggerConfigurationBuilder.builder()
-                .identify(identify)
-                .fileName(identify + ".log")
-                .maxFileSize(FileSize.valueOf("1gb"))
-                .fileNamePattern(identify + "-%d{yyyy-MM-dd-HH}.%i.log")
-                .encodePattern("%d{yyyy-MM-dd HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger{36}:%L - %msg%n")
-                .build();
-
-        Appender<ILoggingEvent> appender = APPENDER_CACHE.getUnchecked(configuration);
+        Appender<ILoggingEvent> appender = APPENDER_CACHE.getUnchecked(XLoggerConfiguration.getDefaultConfiguration(identify));
         return new XLogger(logger, appender);
     }
 

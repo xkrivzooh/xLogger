@@ -15,6 +15,17 @@ public class XLoggerConfiguration {
 
     private String encodePattern;
 
+    public static XLoggerConfiguration getDefaultConfiguration(String identify) {
+        XLoggerConfiguration configuration = XLoggerConfigurationBuilder.builder()
+                .identify(identify)
+                .fileName(identify + ".log")
+                .maxFileSize(FileSize.valueOf("1gb"))
+                .fileNamePattern(identify + "-%d{yyyy-MM-dd-HH}.%i.log.gz")
+                .encodePattern("%d{yyyy-MM-dd HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger{36}:%L - %msg%n")
+                .build();
+        return configuration;
+    }
+
     XLoggerConfiguration() {
     }
 
